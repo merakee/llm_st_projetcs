@@ -1,9 +1,11 @@
 import os
 import sys
+import re
 from dotenv import load_dotenv
 
 # LLM
 from langchain.llms import OpenAI
+from langchain.llms.fake import FakeListLLM
 
 # Prompt
 from langchain.prompts import PromptTemplate
@@ -17,6 +19,13 @@ from langchain.chains import LLMChain
 
 
 load_dotenv()
+
+
+class LlmHelper:
+    @staticmethod
+    def is_key_valid(api_key, platform="OPENAI"):
+        # match: sk-[20 characters]T3BlbkFJ[20 characters].
+        return bool(re.fullmatch(r"sk-[^_\\w]{20}T3BlbkFJ[^_\\w]{20}", api_key))
 
 
 def get_llm(temperature=0.7):
@@ -145,6 +154,49 @@ def get_chain(llm, prompt, verbose=True):
 
 def get_agent(llm, tools, agent_type, verbose=True):
     return None
+
+
+class WhatToWatch:
+    @staticmethod
+    def get_template():
+        template = "I want to watch some entertaining and popular shows. I am in mood for some {genre} shows. Please suggtest me {count} {type}."
+        return template
+
+    def get_prompt(count=3, type="TV show", genre='Comedy'):
+        prompt = PromptTemplate(
+            input_variables=["count", "type", "genre"],
+            template=WhatToWatch.get_template())
+        prompt_complete = prompt.format(count=count, type=type, genre=genre)
+        return prompt_complete
+
+    def get_response(prompt, api_key, run_llm=False, temperatue=0.7):
+        if run_llm:
+            llm = OpenAI(openai_api_key=api_key, temperature=temperatue)
+        else:
+            responses = [
+                "I am not the real LLM. So cannot suggest any shows."]
+            llm = FakeListLLM(responses=responses)
+        try:
+            response = llm(prompt)
+        except Exception as e:
+            response = e
+        return response
+
+
+class AskQuestion:
+    @staticmethod
+    def get_response(prompt, api_key, run_llm=False, temperatue=0.7):
+        if run_llm:
+            llm = OpenAI(openai_api_key=api_key, temperature=temperatue)
+        else:
+            responses = [
+                "I am not the real LLM. So cannot give any real answer"]
+            llm = FakeListLLM(responses=responses)
+        try:
+            response = llm(prompt)
+        except Exception as e:
+            response = e
+        return prompt, response
 
 
 def main(run_llm=False):
