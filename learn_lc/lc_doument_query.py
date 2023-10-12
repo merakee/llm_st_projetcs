@@ -57,33 +57,33 @@ load_dotenv()
 
 class DocumentQuery():
     @staticmethod
-    def get_documents(file_path=None, type="file"):
-        # Load and process the text files
-        if type == "file":
-            if not file_path:
-                file_path = "./testdata/singlefile/test_text.txt"
-            loader = TextLoader(file_path)
-        elif type == "dir":
-            if not file_path:
-                file_path = "./testdata/multiplefiles/"
-            loader = DirectoryLoader(
-                file_path, glob="./*.txt", loader_cls=TextLoader)
-        else:
-            raise NameError("Not a valid document type")
+    # def get_documents(file_path=None, type="file"):
+    #     # Load and process the text files
+    #     if type == "file":
+    #         if not file_path:
+    #             file_path = "./testdata/singlefile/test_text.txt"
+    #         loader = TextLoader(file_path)
+    #     elif type == "dir":
+    #         if not file_path:
+    #             file_path = "./testdata/multiplefiles/"
+    #         loader = DirectoryLoader(
+    #             file_path, glob="./*.txt", loader_cls=TextLoader)
+    #     else:
+    #         raise NameError("Not a valid document type")
 
-        documents = loader.load()
-        return documents
+    #     documents = loader.load()
+    #     return documents
 
-    def document_from_text(text, info):
-        doc = Document(page_content=text, metadata=info)
-        return doc
+    # def document_from_text(text, info):
+    #     doc = Document(page_content=text, metadata=info)
+    #     return doc
 
-    def get_texts(documents, chunk_size=1000, chunk_overlap_per=20):
-        # splitting the text into
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
-                                                       chunk_overlap=(chunk_overlap_per*chunk_size/100.0))
-        texts = text_splitter.split_documents(documents)
-        return texts
+    # def get_texts(documents, chunk_size=1000, chunk_overlap_per=20):
+    #     # splitting the text into
+    #     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
+    #                                                    chunk_overlap=(chunk_overlap_per*chunk_size/100.0))
+    #     texts = text_splitter.split_documents(documents)
+    #     return texts
 
     def get_embedding_model(api_key=None, emb_model="huggingface"):
         if not api_key or emb_model == "huggingface":
@@ -111,42 +111,42 @@ class DocumentQuery():
         embeddings = iem.embed_query(texts)
         return embeddings
 
-    def get_vector_store(embedding, persist_directory='./vdb/chroma',  type="chroma"):
-        # Embed and store the texts
-        # Supplying a persist_directory will store the embeddings on disk
-        vectordb = Chroma(persist_directory=persist_directory,
-                          embedding_function=embedding)
-        return vectordb
+    # def get_vector_store(embedding, persist_directory='./vdb/chroma',  type="chroma"):
+    #     # Embed and store the texts
+    #     # Supplying a persist_directory will store the embeddings on disk
+    #     vectordb = Chroma(persist_directory=persist_directory,
+    #                       embedding_function=embedding)
+    #     return vectordb
 
-    def delete_vdb_dir(dir='./vdb/chroma/*'):
-        os.system(f"rm -rf {dir}")
+    # def delete_vdb_dir(dir='./vdb/chroma/*'):
+    #     os.system(f"rm -rf {dir}")
 
-    def store_in_vector_store(texts, embedding, store_locally=True, persist_directory='./vdb/chroma',  type="chroma"):
-        # Embed and store the texts
-        # Supplying a persist_directory will store the embeddings on disk
-        vectordb = Chroma.from_documents(documents=texts,
-                                         embedding=embedding,
-                                         persist_directory=persist_directory)
-        if store_locally:
-            vectordb.persist()
-        vectordb = None
-        return
+    # def store_in_vector_store(texts, embedding, store_locally=True, persist_directory='./vdb/chroma',  type="chroma"):
+    #     # Embed and store the texts
+    #     # Supplying a persist_directory will store the embeddings on disk
+    #     vectordb = Chroma.from_documents(documents=texts,
+    #                                      embedding=embedding,
+    #                                      persist_directory=persist_directory)
+    #     if store_locally:
+    #         vectordb.persist()
+    #     vectordb = None
+    #     return
 
-    def create_vdb(documents, api_key=None, emb_model="huggingface", chunk_size=1000, chunk_overlap_per=20):
-        texts = DocumentQuery.get_texts(
-            documents=documents, chunk_size=chunk_size, chunk_overlap_per=chunk_overlap_per)
-        embedding = DocumentQuery.get_embedding_model(
-            api_key=api_key, emb_model=emb_model)
-        vectordb = Chroma.from_documents(documents=texts,
-                                         embedding=embedding)
-        return vectordb, len(texts)
+    # def create_vdb(documents, api_key=None, emb_model="huggingface", chunk_size=1000, chunk_overlap_per=20):
+    #     texts = DocumentQuery.get_texts(
+    #         documents=documents, chunk_size=chunk_size, chunk_overlap_per=chunk_overlap_per)
+    #     embedding = DocumentQuery.get_embedding_model(
+    #         api_key=api_key, emb_model=emb_model)
+    #     vectordb = Chroma.from_documents(documents=texts,
+    #                                      embedding=embedding)
+    #     return vectordb, len(texts)
 
-    def get_retriever(embedding, search_type="similarity", max_count=3):
-        vectordb = DocumentQuery.get_vector_store(
-            embedding=embedding)
-        retriever = vectordb.as_retriever(
-            search_kwargs={"k": max_count}, search_type=search_type)
-        return retriever
+    # def get_retriever(embedding, search_type="similarity", max_count=3):
+    #     vectordb = DocumentQuery.get_vector_store(
+    #         embedding=embedding)
+    #     retriever = vectordb.as_retriever(
+    #         search_kwargs={"k": max_count}, search_type=search_type)
+    #     return retriever
 
     def get_chain(llm, retriever, chain_type="stuff", return_source_documents=True):
         # create the chain to answer questions

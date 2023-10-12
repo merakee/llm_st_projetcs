@@ -25,79 +25,76 @@ from lc_doument_query import DocumentQuery as lcdq
 load_dotenv()
 
 
-class SystemHelper:
-    @staticmethod
-    def get_deployment_env():
-        deployment_env = os.getenv("DEPLOYMENT_ENV")
-        return deployment_env
+# class SystemHelper:
+#     @staticmethod
+#     def get_deployment_env():
+#         deployment_env = os.getenv("DEPLOYMENT_ENV")
+#         return deployment_env
 
-    def is_production():
-        return SystemHelper.get_deployment_env() == "PROD"
+#     def is_production():
+#         return SystemHelper.get_deployment_env() == "PROD"
 
-    def is_development():
-        env = SystemHelper.get_deployment_env()
-        return not env or env == "DEV"
+#     def is_development():
+#         env = SystemHelper.get_deployment_env()
+#         return not env or env == "DEV"
 
-    def is_test():
-        return SystemHelper.get_deployment_env() == "TEST"
+#     def is_test():
+#         return SystemHelper.get_deployment_env() == "TEST"
 
-    def st_save_uploadedfile(uploadedfile):
-        with open(os.path.join("/tmp", uploadedfile.name), "wb") as f:
-            f.write(uploadedfile.getbuffer())
-        return True
+#     def st_save_uploadedfile(uploadedfile):
+#         with open(os.path.join("/tmp", uploadedfile.name), "wb") as f:
+#             f.write(uploadedfile.getbuffer())
+#         return True
 
-    def wait(secs=1):
-        time.sleep(secs)
+#     def wait(secs=1):
+#         time.sleep(secs)
 
 
-class LlmHelper:
-    @staticmethod
-    def get_local_api_key():
-        api_key = None
-        if SystemHelper.is_production():
-            type = "openai"
-        else:
-            type = "huggingface"
+# class LlmHelper:
+#     @staticmethod
+#     # def get_local_api_key():
+#     #     api_key = None
+#     #     if SystemHelper.is_production():
+#     #         type = "openai"
+#     #     else:
+#     #         type = "huggingface"
+#     #     valid_api_types = ["openai", "huggingface"]
+#     #     if type not in valid_api_types:
+#     #         raise NameError("Not a valid API type")
+#     #     if type == "openai":
+#     #         api_key = os.getenv("OPENAI_API_KEY")
+#     #     elif type == "huggingface":
+#     #         api_key = os.getenv("HFHUB_API_KEY")
+#     #     return api_key
+#     def get_openai_llm(api_key, temperature=0.7, model_name="text-davinci-003"):
+#         # OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+#         # model_name = "gpt-3.5-turbo"
+#         llm = OpenAI(model_name=model_name, temperature=temperature,
+#                      openai_api_key=api_key)
+#         return llm
 
-        valid_api_types = ["openai", "huggingface"]
-        if type not in valid_api_types:
-            raise NameError("Not a valid API type")
-        if type == "openai":
-            api_key = os.getenv("OPENAI_API_KEY")
-        elif type == "huggingface":
-            api_key = os.getenv("HFHUB_API_KEY")
+#     def get_hf_llm(api_key, model_name="google/flan-t5-xxl", temperature=0.7, max_length=64):
+#         llm = HuggingFaceHub(
+#             repo_id=model_name, huggingfacehub_api_token=api_key, model_kwargs={"temperature": temperature, "max_length": max_length})
+#         return llm
 
-        return api_key
+# def is_key_valid(api_key, platform="OPENAI"):
+#     # match: sk-[20 characters]T3BlbkFJ[20 characters].
+#     return bool(re.fullmatch(r"sk-[^_\\w]{20}T3BlbkFJ[^_\\w]{20}", api_key))
 
-    def get_openai_llm(api_key, temperature=0.7, model_name="text-davinci-003"):
-        # OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-        # model_name = "gpt-3.5-turbo"
-        llm = OpenAI(model_name=model_name, temperature=temperature,
-                     openai_api_key=api_key)
-        return llm
-
-    def get_hf_llm(api_key, model_name="google/flan-t5-xxl", temperature=0.7, max_length=64):
-        llm = HuggingFaceHub(
-            repo_id=model_name, huggingfacehub_api_token=api_key, model_kwargs={"temperature": temperature, "max_length": max_length})
-        return llm
-
-    def is_key_valid(api_key, platform="OPENAI"):
-        # match: sk-[20 characters]T3BlbkFJ[20 characters].
-        return bool(re.fullmatch(r"sk-[^_\\w]{20}T3BlbkFJ[^_\\w]{20}", api_key))
-
-    def get_llm(api_key, temperature=0.7, model_name=None):
-        if SystemHelper.is_production():
-            print("*********** OPEN AI ******* ")
-            if model_name:
-                return LlmHelper.get_openai_llm(api_key=api_key, temperature=temperature, model_name=model_name)
-            else:
-                return LlmHelper.get_openai_llm(api_key=api_key, temperature=temperature)
-        else:
-            print("*********** HF ******* ")
-            if model_name:
-                return LlmHelper.get_hf_llm(api_key=api_key, temperature=temperature, model_name=model_name)
-            else:
-                return LlmHelper.get_hf_llm(api_key=api_key, temperature=temperature)
+# def get_llm(api_key, temperature=0.7, model_name=None):
+#     if SystemHelper.is_production():
+#         print("*********** OPEN AI ******* ")
+#         if model_name:
+#             return LlmHelper.get_openai_llm(api_key=api_key, temperature=temperature, model_name=model_name)
+#         else:
+#             return LlmHelper.get_openai_llm(api_key=api_key, temperature=temperature)
+#     else:
+#         print("*********** HF ******* ")
+#         if model_name:
+#             return LlmHelper.get_hf_llm(api_key=api_key, temperature=temperature, model_name=model_name)
+#         else:
+#             return LlmHelper.get_hf_llm(api_key=api_key, temperature=temperature)
 
 
 class LlmExp:
