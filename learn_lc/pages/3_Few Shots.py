@@ -15,7 +15,7 @@ def format_response(text):
 # page config
 sth.set_page()
 # Header
-sth.set_header(title="LLM Demp App", subheader="One Shot With Parameter")
+sth.set_header(title="LLM Exp", subheader="to be implemented")
 
 # side bar
 sth.set_side_bar()

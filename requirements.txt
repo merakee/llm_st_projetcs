@@ -1,4 +1,8 @@
-langchain==0.0.310
+langchain==0.0.312
 python-dotenv==1.0.0
 streamlit==1.27.2
 openai==0.28.1
+huggingface-hub==0.18.0
+InstructorEmbedding==1.0.1
+sentence-transformers==2.2.2
+chromadb==0.4.14

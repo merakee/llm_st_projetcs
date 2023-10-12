@@ -96,8 +96,13 @@ def set_side_bar():
             if button_key:
                 del st.session_state.openai_api_key
                 api_container.text_input("OpenAI API Key", type="password")
+        if (llmh.SystemHelper.is_development()):
+            st.checkbox('Debug', key="is_debug_on")
 
-        st.checkbox('Debug', key="is_debug_on")
+
+def save_file(uploadedfile):
+    if llmh.SystemHelper.st_save_uploadedfile(uploadedfile):
+        return st.success(f"Saved File: {uploadedfile.name} to '\\tmp'")
 
 
 # # Body
