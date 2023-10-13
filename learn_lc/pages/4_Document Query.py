@@ -1,15 +1,16 @@
 import streamlit as st
-import st_helper as sth
-import lang_chain_helper as llmh
+from st_code.st_base import STBase
+import lc_code.lang_chain_helper as llmh
+
 
 # page config
-sth.set_page()
+STBase.set_page()
 # Header
-sth.set_header(title="Document Query",
-               subheader="Upload txt document(s) and query the content")
+STBase.set_header(title="Document Query",
+                  subheader="Upload txt document(s) and query the content")
 
 # side bar
-sth.set_side_bar()
+STBase.set_side_bar()
 
 # set file list
 

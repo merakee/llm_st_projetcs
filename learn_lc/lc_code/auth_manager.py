@@ -44,8 +44,8 @@ class DeploymentManager:
 
 
 class APIType(Enum):
-    openai = 1
-    huggingface = 2
+    OpenAI = 1
+    HuggingFace = 2
 
 
 class APIKey:
@@ -82,10 +82,11 @@ class AuthManager:
         self.api_key_store.pop(api_key.tag)
         return True
 
+    @staticmethod
     def get_local_api_key(api_type):
-        if api_type == APIType.openai:
+        if api_type == APIType.OpenAI:
             api_key = os.getenv("OPENAI_API_KEY")
-        elif type == APIType.huggingface:
+        elif type == APIType.HuggingFace:
             api_key = os.getenv("HFHUB_API_KEY")
         else:
             api_key = None
@@ -93,9 +94,15 @@ class AuthManager:
         return api_key
 
     def is_key_format_valid(api_key):
-        if api_key.api_type == APIType.openai:
+        if api_key.api_type == APIType.OpenAI:
             # match: sk-[20 characters]T3BlbkFJ[20 characters].
-            return bool(re.fullmatch(r"sk-[^_\\w]{20}T3BlbkFJ[^_\\w]{20}", api_key.api_token))
-        if api_key.api_type == APIType.huggingface:
+            return AuthManager.is_openai_api_key_valid(api_key.api_token)
+        if api_key.api_type == APIType.HuggingFace:
             # match: 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
-            return bool(re.fullmatch(r"hf_[a-zA-Z]{34}", api_key.api_token))
+            return AuthManager.is_huggingface_api_key_valid(api_key.api_token)
+
+    def is_openai_api_key_valid(key):
+        return bool(re.fullmatch(r"sk-[^_\\w]{20}T3BlbkFJ[^_\\w]{20}", key))
+
+    def is_huggingface_api_key_valid(key):
+        return bool(re.fullmatch(r"hf_[a-zA-Z]{34}", key))

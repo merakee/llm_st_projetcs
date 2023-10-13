@@ -20,7 +20,7 @@ from langchain.prompts.example_selector import LengthBasedExampleSelector
 from langchain.chains import LLMChain
 
 # local utility
-from lc_doument_query import DocumentQuery as lcdq
+from lc_pages.lc_doument_query import DocumentQuery as lcdq
 
 load_dotenv()
 
@@ -214,77 +214,6 @@ class LlmExp:
     def get_agent(llm, tools, agent_type, verbose=True):
         return None
 
-
-class WhatToWatch:
-    @staticmethod
-    def get_template():
-        template = "I want to watch some entertaining and popular shows. I am in mood for some {genre} shows. Please suggtest me {count} {type}."
-        return template
-
-    def get_prompt(count=3, type="TV show", genre='Comedy'):
-        prompt = PromptTemplate(
-            input_variables=["count", "type", "genre"],
-            template=WhatToWatch.get_template())
-        prompt_complete = prompt.format(count=count, type=type, genre=genre)
-        return prompt_complete
-
-    def get_response(prompt, api_key, run_llm=False, temperatue=0.7):
-        if run_llm:
-            llm = OpenAI(openai_api_key=api_key, temperature=temperatue)
-        else:
-            responses = [
-                "I am not the real LLM. So cannot suggest any shows."]
-            llm = FakeListLLM(responses=responses)
-        try:
-            response = llm(prompt)
-        except Exception as e:
-            response = e
-        return response
-
-
-class AskQuestion:
-    @staticmethod
-    def get_response(prompt, api_key, run_llm=False, temperatue=0.7):
-        if run_llm:
-            llm = OpenAI(openai_api_key=api_key, temperature=temperatue)
-        else:
-            responses = [
-                "I am not the real LLM. So cannot give any real answer"]
-            llm = FakeListLLM(responses=responses)
-        try:
-            response = llm(prompt)
-        except Exception as e:
-            response = e
-        return prompt, response
-
-
-class DocumentQuery:
-    @staticmethod
-    def load_document():
-        return
-
-    def query_document():
-        return
-
-    def document_from_text(text, info):
-        return lcdq.document_from_text(text, info)
-
-    def get_texts_from_documents(documents, chunk_size=1000, chunk_overlap_per=20):
-        return lcdq.get_texts(documents, chunk_size=chunk_size, chunk_overlap_per=chunk_overlap_per)
-
-    def create_vdb(documents, api_key=None, emb_model="huggingface", chunk_size=1000, chunk_overlap_per=20):
-        return lcdq.create_vdb(documents=documents, api_key=api_key, emb_model=emb_model, chunk_size=chunk_size, chunk_overlap_per=chunk_overlap_per)
-
-    def get_llm_response(query, vectoredb, api_key, emb_model="huggingface", search_type="similarity", max_count=3):
-        return lcdq.get_llm_response(query=query, vectoredb=vectoredb, api_key=api_key, emb_model=emb_model, search_type=search_type, max_count=max_count)
-
-    def test_dq():
-        api_key = LlmHelper.get_local_api_key()
-        llm = LlmHelper.get_llm(api_key=api_key)
-        reset_db = input("Clear and write new DB? (y): ")
-
-        lcdq.test(llm=llm, api_key=api_key, is_write=(
-            reset_db == 'y'), is_reset=(reset_db == 'y'))
 
 
 def main(run_llm=False):

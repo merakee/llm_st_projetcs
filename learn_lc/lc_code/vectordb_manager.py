@@ -3,7 +3,7 @@ import os
 from enum import Enum
 
 # local 
-from system_util import IncompleteSetupException
+from learn_lc.lc_code.system_util import IncompleteSetupException
 
 # langchain
 # Vector store

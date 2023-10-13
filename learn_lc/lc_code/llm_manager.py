@@ -5,14 +5,14 @@ from enum import Enum
 from dotenv import load_dotenv
 
 # local
-from auth_manager import APIType
-from auth_manager import APIKey
+from lc_code.auth_manager import APIType
+from lc_code.auth_manager import APIKey
 
 # langchain
 # LLM
 from langchain.llms import OpenAI
-from langchain.llms import ChatOpenAI
-from langchain.llms.fake import FakeListLLM
+# from langchain.llms import ChatOpenAI
+# from langchain.llms.fake import FakeListLLM
 from langchain.llms import HuggingFaceHub
 
 # implementation
@@ -45,16 +45,16 @@ class LLMManager:
 
     def get_hf_llm(api_key, model_name="google/flan-t5-xxl", temperature=0.7, max_length=64):
         llm = HuggingFaceHub(
-            repo_id=model_name, huggingfacehub_api_token=api_key, model_kwargs={"temperature": temperature, "max_length": max_length})
+            repo_id=model_name, huggingfacehub_api_token=api_key.api_token, model_kwargs={"temperature": temperature, "max_length": max_length})
         return llm
 
     def get_llm(api_key, temperature=0.7, model_name=None):
-        if api_key.api_type == APIType.openai:
+        if api_key.api_type == APIType.OpenAI:
             if model_name:
                 return LLMManager.get_openai_llm(api_key=api_key, temperature=temperature, model_name=model_name)
             else:
                 return LLMManager.get_openai_llm(api_key=api_key, temperature=temperature)
-        elif api_key.api_type == APIType.huggingface:
+        elif api_key.api_type == APIType.HuggingFace:
             if model_name:
                 return LLMManager.get_hf_llm(api_key=api_key, temperature=temperature, model_name=model_name)
             else:
@@ -91,3 +91,11 @@ class OpenAIModelInfo:
                 if model:
                     models.append(model)
         return models
+
+
+class HuggingFaceModelInfo:
+    @staticmethod
+    def get_openai_llm_models_info():
+        # https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard
+        # https://huggingface.co/models?pipeline_tag=text-generation&sort=downloads
+        pass

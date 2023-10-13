@@ -1,21 +1,11 @@
 import streamlit as st
-import st_helper as sth
-import lang_chain_helper as llmh
-
-# methods
-
-
-def format_response(text):
-    response = ""
-    if not response:
-        response = "LLM not called"
-    return response
+from st_code.st_base import STBase
 
 
 # page config
-sth.set_page()
+STBase.set_page()
 # Header
-sth.set_header(title="LLM Exp", subheader="to be implemented")
+STBase.set_header(title="LLM Exp", subheader="to be implemented")
 
 # side bar
-sth.set_side_bar()
+STBase.set_side_bar()

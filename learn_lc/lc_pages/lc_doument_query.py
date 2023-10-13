@@ -55,6 +55,35 @@ load_dotenv()
 #       3. Interactive answers
 
 
+class DocumentQueryFromHelper:
+    @staticmethod
+    def load_document():
+        return
+
+    def query_document():
+        return
+
+    def document_from_text(text, info):
+        return lcdq.document_from_text(text, info)
+
+    def get_texts_from_documents(documents, chunk_size=1000, chunk_overlap_per=20):
+        return lcdq.get_texts(documents, chunk_size=chunk_size, chunk_overlap_per=chunk_overlap_per)
+
+    def create_vdb(documents, api_key=None, emb_model="huggingface", chunk_size=1000, chunk_overlap_per=20):
+        return lcdq.create_vdb(documents=documents, api_key=api_key, emb_model=emb_model, chunk_size=chunk_size, chunk_overlap_per=chunk_overlap_per)
+
+    def get_llm_response(query, vectoredb, api_key, emb_model="huggingface", search_type="similarity", max_count=3):
+        return lcdq.get_llm_response(query=query, vectoredb=vectoredb, api_key=api_key, emb_model=emb_model, search_type=search_type, max_count=max_count)
+
+    def test_dq():
+        api_key = LlmHelper.get_local_api_key()
+        llm = LlmHelper.get_llm(api_key=api_key)
+        reset_db = input("Clear and write new DB? (y): ")
+
+        lcdq.test(llm=llm, api_key=api_key, is_write=(
+            reset_db == 'y'), is_reset=(reset_db == 'y'))
+
+
 class DocumentQuery():
     @staticmethod
     # def get_documents(file_path=None, type="file"):
@@ -70,21 +99,17 @@ class DocumentQuery():
     #             file_path, glob="./*.txt", loader_cls=TextLoader)
     #     else:
     #         raise NameError("Not a valid document type")
-
     #     documents = loader.load()
     #     return documents
-
     # def document_from_text(text, info):
     #     doc = Document(page_content=text, metadata=info)
     #     return doc
-
     # def get_texts(documents, chunk_size=1000, chunk_overlap_per=20):
     #     # splitting the text into
     #     text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
     #                                                    chunk_overlap=(chunk_overlap_per*chunk_size/100.0))
     #     texts = text_splitter.split_documents(documents)
     #     return texts
-
     def get_embedding_model(api_key=None, emb_model="huggingface"):
         if not api_key or emb_model == "huggingface":
             return DocumentQuery.get_hf_embedding_model()
