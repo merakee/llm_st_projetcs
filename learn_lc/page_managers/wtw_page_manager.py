@@ -3,14 +3,27 @@ from enum import Enum
 
 # local
 from st_code.st_session_manager import STSessionManager
-from lc_code.llm_manager import LLMManager
+from app_managers.llm_manager import LLMManager
 
 # langchain
 from langchain.prompts import PromptTemplate
 
 
+class WTWSessionKeys(Enum):
+    whattowatch_type = 1
+    whattowatch_genre = 2
+    whattowatch_count = 3
+
+
+class WTWSessionManager():
+    @staticmethod
+    def get_value_for_key(sesssion_key):
+        return STSessionManager.get_value_for_key(session_key=sesssion_key)
+
 # implementation
-class LCWhatToWatch:
+
+
+class WTWPageManager:
     @staticmethod
     def get_template():
         template = "I want to watch some entertaining and popular shows. I am in mood for some {genre} shows. Please suggtest me {count} {type}."
@@ -19,7 +32,7 @@ class LCWhatToWatch:
     def get_prompt():
         prompt = PromptTemplate(
             input_variables=["count", "type", "genre"],
-            template=LCWhatToWatch.get_template())
+            template=WTWPageManager.get_template())
         wtw_count = WTWSessionManager.get_value_for_key(
             WTWSessionKeys.whattowatch_count)
         wtw_type = WTWSessionManager.get_value_for_key(
@@ -50,14 +63,14 @@ class LCWhatToWatch:
 
     def get_index_for_key(session_key):
         if session_key.name == WTWSessionKeys.whattowatch_type:
-            return LCWhatToWatch.get_type_list().index(WTWSessionManager.get_value_for_key(session_key))
+            return WTWPageManager.get_type_list().index(WTWSessionManager.get_value_for_key(session_key))
         if session_key.name == WTWSessionKeys.whattowatch_genre:
-            return LCWhatToWatch.get_genre_list().index(WTWSessionManager.get_value_for_key(session_key))
+            return WTWPageManager.get_genre_list().index(WTWSessionManager.get_value_for_key(session_key))
 
         return 0
 
     def get_llm_response():
-        prompt = LCWhatToWatch.get_prompt()
+        prompt = WTWPageManager.get_prompt()
         # check if api_keyis set
         if not STSessionManager.is_api_key_set():
             response = "API Key not set. LLM not run"
@@ -82,18 +95,3 @@ class LCWhatToWatch:
             response = e
 
         return response, prompt
-
-
-class WTWSessionKeys(Enum):
-    whattowatch_type = 1
-    whattowatch_genre = 2
-    whattowatch_count = 3
-
-
-class WTWSessionManager():
-    def __init__(self) -> None:
-        pass
-
-    @staticmethod
-    def get_value_for_key(sesssion_key):
-        return STSessionManager.get_value_for_key(session_key=sesssion_key)

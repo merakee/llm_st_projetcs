@@ -5,8 +5,8 @@ from enum import Enum
 from dotenv import load_dotenv
 
 # local
-from lc_code.auth_manager import APIType
-from lc_code.auth_manager import APIKey
+from app_managers.auth_manager import APIType
+from app_managers.auth_manager import APIKey
 
 # langchain
 # LLM

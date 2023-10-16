@@ -3,13 +3,13 @@
 
 # local
 from st_code.st_session_manager import STSessionManager
-from lc_code.llm_manager import LLMManager
+from app_managers.llm_manager import LLMManager
 
 # langchain
 
 
 # implementation
-class LCAskQuestion:
+class AQPageManager:
     @staticmethod
     def get_llm_response(prompt):
         # check if api_keyis set

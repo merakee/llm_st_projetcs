@@ -20,7 +20,7 @@ from langchain.prompts.example_selector import LengthBasedExampleSelector
 from langchain.chains import LLMChain
 
 # local utility
-from lc_pages.lc_doument_query import DocumentQuery as lcdq
+from learn_lc.page_managers.dq_lc_manager import DocumentQuery as lcdq
 
 load_dotenv()
 
@@ -213,7 +213,6 @@ class LlmExp:
 
     def get_agent(llm, tools, agent_type, verbose=True):
         return None
-
 
 
 def main(run_llm=False):

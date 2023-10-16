@@ -2,8 +2,8 @@
 
 
 # local
-from lc_code.auth_manager import DeploymentManager
-from lc_code.auth_manager import AuthManager
+from app_managers.auth_manager import DeploymentManager
+from app_managers.auth_manager import AuthManager
 
 
 # langchain
@@ -17,7 +17,7 @@ class STUtil:
 
     @staticmethod
     def show_debug_option():
-        return DeploymentManager().is_dev_or_test()
+        return not DeploymentManager().is_prod()
 
     def is_api_key_valid(api_key):
         return AuthManager.is_key_format_valid(api_key)

@@ -29,6 +29,10 @@ class FileType(Enum):
     csv = 5
 
 
+class TextSplitterType(Enum):
+    RecursiveCharecterTextSplitter = 1
+
+
 class DocumentUtil:
     def __init__(self, upload_type, file_path, file_type):
         self.upload_type = upload_type
@@ -70,10 +74,13 @@ class DocumentUtil:
     def get_default_dir_path():
         return "./testdata/multiplefiles/"
 
-    def chunk_documents(documents, chunk_size=1000, chunk_overlap_per=20):
+    def split_documents_to_texts(documents, chunk_size=1000, chunk_overlap_per=20, splitter_type=TextSplitterType.RecursiveCharecterTextSplitter):
         # splitting the text into
         chunk_overlap = (chunk_overlap_per*chunk_size/100.0)
-        text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
-                                                       chunk_overlap=chunk_overlap)
+        # print(TextSplitterType.RecursiveCharecterTextSplitter.name)
+        if splitter_type == TextSplitterType.RecursiveCharecterTextSplitter:
+            text_splitter = RecursiveCharacterTextSplitter(chunk_size=chunk_size,
+                                                           chunk_overlap=chunk_overlap)
+
         texts = text_splitter.split_documents(documents)
         return texts

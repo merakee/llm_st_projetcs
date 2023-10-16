@@ -3,8 +3,8 @@ from enum import Enum
 
 # local
 from st_code.st_util import STUtil
-from lc_code.auth_manager import APIKey
-from lc_code.auth_manager import APIType
+from app_managers.auth_manager import APIKey
+from app_managers.auth_manager import APIType
 
 # ST
 import streamlit as st
@@ -28,6 +28,12 @@ class STSessionManager:
         pass
 
     @staticmethod
+    def initialize_key(session_key, value):
+        if session_key.name in st.session_state:
+            return False
+        st.session_state[session_key.name] = value
+        return True
+
     def set_key(session_key, value):
         if session_key in [STSessionKeys.openai_api_key or STSessionKeys.huggingface_api_key]:
             return STSessionManager.set_api_key(value=value, session_key=session_key)
@@ -100,6 +106,9 @@ class STSessionManager:
 
     def is_key_set(session_key):
         return session_key.name in st.session_state and st.session_state[session_key.name] is not None
+
+    def is_key_not_empty(session_key):
+        return True if session_key.name in st.session_state and st.session_state[session_key.name] else False
 
     def is_api_key_set():
         selected_api = STSessionManager.get_value_for_key(

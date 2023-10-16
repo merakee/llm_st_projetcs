@@ -5,7 +5,7 @@ import streamlit as st
 
 # local
 from st_code.st_base import STBase
-from lc_pages.lc_ask_question import LCAskQuestion
+from page_managers.aq_page_manager import AQPageManager
 
 # implementation
 #
@@ -26,7 +26,7 @@ with st.form('ask_a_quesion_form'):
     submitted = st.form_submit_button('Submit')
     if submitted:
         with st.spinner("waiting"):
-            response = LCAskQuestion.get_llm_response(prompt=prompt)[0]
+            response = AQPageManager.get_llm_response(prompt=prompt)[0]
         st.write("Prompt:")
         st.info(prompt)
         st.write("AI Response:")
